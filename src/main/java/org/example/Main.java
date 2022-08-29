@@ -5,8 +5,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper; // version 2.11.1
+
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -19,21 +21,20 @@ public class Main {
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
-        String resultados = response.body();
         System.out.println(response.body());
 
         //Parse JSON into object
         try{
-            Gson gson = new Gson();
-
-            Response response1 = gson.fromJson(response.body(), Response.class);
-            System.out.println(response1);
-
-            System.out.println(response1.getCases());
+            ObjectMapper om = new ObjectMapper();
+            Root root = om.readValue(response.body(), Root.class);
+            System.out.println(root.response.get(0).cases.mynew);
         } catch (Exception e){
             e.printStackTrace();
         }
 
     }
+
+
+
+
 }
