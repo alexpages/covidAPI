@@ -6,8 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -21,22 +20,20 @@ public class Main {
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-
+        String resultados = response.body();
         System.out.println(response.body());
 
         //Parse JSON into object
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(response.body());
-        String casesCountry = jsonNode.get("cases").asText();
+        try{
+            Gson gson = new Gson();
 
+            Response response1 = gson.fromJson(response.body(), Response.class);
+            System.out.println(response1);
 
-
-
-
-        //Gson gson = new Gson();
-        //String jsonRequest = gson.toJson(response.body());
-        //countryDetails countryObject = gson.fromJson(jsonRequest, countryDetails.class);
-
+            System.out.println(response1.getCases());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 }
