@@ -1,7 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
-public class Root{
+public class Statistics {
     public String get;
     public Parameters parameters;
     public ArrayList<Object> errors;

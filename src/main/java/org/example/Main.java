@@ -5,21 +5,28 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper; // version 2.11.1
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
-
-        //String Builder for user input
-        StringBuilder uriHttp = new StringBuilder();
+        //Scanner
         Scanner console = new Scanner(System.in);
-        System.out.println("Please enter a valid country name: ");
+        String[] countriesList = new String[]{"Afghanistan", "Albania", "Algeria","Andorra","Angola","Anguilla","Antigua-and-Barbuda","Argentina", "Armenia", "Aruba", "Austra,lia","Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia-and-Herzegovina", "Botswana", "Brazil", "British-Virgin-Islands", "Brunei", "Bulgaria", "Burkina-Faso", "Burundi", "Cabo-Verde", "Cambodia", "Cameroon", "Canada", "CAR", "Caribbean-Netherlands", "Cayman-Islands", "Chad", "Channel-Islands", "Chile", "China", "Colombia", "Comoros", "Congo", "Cook-Islands", "Costa-Rica", "Croatia", "Cuba", "Cura&ccedil;ao", "Cyprus", "Czechia", "Denmark", "Diamond-Princess", "Diamond-Princess-", "Djibouti", "Dominica", "Dominican-Republic", "DPRK", "DRC", "Ecuador", "Egypt", "El-Salvador", "Equatorial-Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Faeroe-Islands", "Falkland-Islands", "Fiji", "Finland", "France", "French-Guiana", "French-Polynesia", "Gabon","Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hong-Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle-of-Man", "Israel", "Italy", "Ivory-Coast", "Jamaica","Japan", "Jordan","Kazakhstan","Kenya", "Kiribati","Kuwait", "Kyrgyzstan", "Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macao","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall-Islands","Martinique","Mauritania","Mauritius","Mayotte","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","MS-Zaandam","MS-Zaandam-","Myanmar","Namibia","Nauru","Nepal","Netherlands","New-Caledonia","New-Zealand","Nicaragua","Niger","Nigeria","Niue","North-Macedonia","Norway","Oman","Pakistan","Palestine","Panama","Papua-New-Guinea","Paraguay","Peru","Philippines", "Poland","Portugal", "Puerto-Rico","Qatar", "R&eacute;union","Romania", "Russia","Rwanda", "S-Korea","Saint-Helena", "Saint-Kitts-and-Nevis","Saint-Lucia", "Saint-Martin","Saint-Pierre-Miquelon","Samoa", "San-Marino","Sao-Tome-and-Principe","Saudi-Arabia","Senegal", "Serbia","Seychelles", "Sierra-Leone","Singapore", "Sint-Maarten","Slovakia", "Slovenia","Solomon-Islands","Somalia", "South-Africa","South-Sudan", "Spain","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad-and-Tobago","Tunisia","Turkey","Turks-and-Caicos","Tuvalu","UAE","Uganda","UK","Ukraine","Uruguay","US-Virgin-Islands","USA","Uzbekistan","Vanuatu","Vatican-City", "Venezuela", "Vietnam", "Wallis-and-Futuna", "Western-Sahara", "Yemen", "Zambia", "Zimbabwe"};
+        System.out.println("Please enter a valid country name ");
         String country = console.nextLine();
-        uriHttp.append("https://covid-193.p.rapidapi.com/statistics?country=");
-        uriHttp.append(country.toLowerCase());
 
+        while (!Arrays.stream(countriesList).toList().contains(country)){
+            System.out.println(country + " is not a valid country, please enter a valid country name again: ");
+            country = console.nextLine();
+        }
+        StringBuilder uriHttp = new StringBuilder();
+        uriHttp.append("https://covid-193.p.rapidapi.com/statistics?country=");
+        uriHttp.append(country);
+
+        String a = uriHttp.toString();
         //Calling function
         System.out.println(newCasesCountry(uriHttp.toString()));
     }
@@ -35,17 +42,16 @@ public class Main {
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println(response.body());
-
         //Parse JSON into object
-        Root root = null;
+        Statistics statistics = null;
         try {
             ObjectMapper om = new ObjectMapper();
-            root = om.readValue(response.body(), Root.class);
+            statistics = om.readValue(response.body(), Statistics.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return root.response.get(0).cases.mynew;
+        return statistics.response.get(0).cases.mynew;
     }
 
 }
