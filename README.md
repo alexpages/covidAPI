@@ -7,6 +7,7 @@ This is a little project that uses an API from rapidapi.com that provides inform
   - Understand http protocols and requests (Header, Body, etc.).
   - Understand how to parse out a response from previous http request using ObjectMapper.
   - Understand ObjectMapper and what it implies (such as: Creation of classes, creating an object that uses previously defined classes, use the object to retrieve data, etc.).
+  - Establish connection to MySQL DB and fetch and insert data to the table.
  
 ## How to Install and Run the Project
 Simply export all the files. Open in your preferred IDE (i.e: IntelliJ) and execute it. Make sure that the:
